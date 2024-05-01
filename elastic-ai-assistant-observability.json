@@ -1,0 +1,96 @@
+openapi: 3.0.0
+info:
+   title: Observability AI Assistant Chat API
+   version: 1.0.0
+paths:
+   /api/observability_ai_assistant/chat/complete:
+     post:
+       summary: Completes a chat session with observability details.
+       requestBody:
+         required: true
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                 messages:
+                   type: array
+                   items:
+                     type: object
+                     properties:
+                       '@timestamp':
+                         type: string
+                       message:
+                         type: object
+                         properties:
+                           role:
+                             type: string
+                             enum:
+                               - system
+                               - assistant
+                               - user
+                               - elastic
+                           content:
+                             type: string
+                           name:
+                             type: string
+                           function_call:
+                             type: object
+                             properties:
+                               name:
+                                 type: string
+                               trigger:
+                                 type: string
+                                 enum:
+                                   - assistant
+                                   - user
+                                   - elastic
+                               arguments:
+                                 type: object
+                               data:
+                                 type: object
+                     required:
+                       - '@timestamp'
+                       - message
+                 connectorId:
+                   type: string
+                 persist:
+                   type: object
+                 conversationId:
+                   type: string
+                 title:
+                   type: string
+                 responseLanguage:
+                   type: string
+                 instructions:
+                   type: array
+                   items:
+                     oneOf:
+                       - type: string
+                       - type: object
+                         properties:
+                           doc_id:
+                             type: string
+                           text:
+                             type: string
+                         required:
+                           - doc_id
+                           - text
+                 actions:
+                   type: array
+                   items:
+                     type: object
+                     properties:
+                       name:
+                         type: string
+                       description:
+                         type: string
+                       parameters:
+                         type: object
+               required:
+                 - messages
+                 - connectorId
+                 - persist
+       responses:
+         200:
+           description: Chat session successfully started
